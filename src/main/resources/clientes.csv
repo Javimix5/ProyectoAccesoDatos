@@ -1,0 +1,5 @@
+id,nombre,apellido1,apellido2,telefono,email,direccion,dni
+1,Laura,García,Pérez,611223344,laura.garcia@email.com,"Calle Mayor 1, Madrid",12345678A
+2,Carlos,Martínez,Sánchez,655667788,carlos.martinez@email.com,"Avenida de la Luz 23, Barcelona",87654321B
+3,Ana,López,Jiménez,699887766,ana.lopez@email.com,"Plaza Nueva 5, Sevilla",11223344C
+4,Nando,Parga,Fernández,665665665,nando@gmail.com,"Rua Miño, 16",32323323F
