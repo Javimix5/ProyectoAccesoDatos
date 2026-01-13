@@ -1,0 +1,486 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Proyecto Acceso Datos API",
+    "version": "1.0.0",
+    "description": "Documentación de la API para la gestión de Clientes, Productos, Proveedores, Ventas y Compras."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Servidor Local"
+    }
+  ],
+  "paths": {
+    "/api/clientes": {
+      "get": {
+        "tags": ["Cliente Controller"],
+        "summary": "Obtener todos los clientes",
+        "operationId": "getAllClientes",
+        "responses": {
+          "200": {
+            "description": "Operación exitosa",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Cliente" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Cliente Controller"],
+        "summary": "Crear un nuevo cliente",
+        "operationId": "createCliente",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Cliente" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Cliente creado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Cliente" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/clientes/{id}": {
+      "get": {
+        "tags": ["Cliente Controller"],
+        "summary": "Obtener cliente por ID",
+        "operationId": "getClienteById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int32" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cliente encontrado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Cliente" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Cliente Controller"],
+        "summary": "Eliminar cliente por ID",
+        "operationId": "deleteCliente",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int32" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Cliente eliminado" }
+        }
+      }
+    },
+    "/api/productos": {
+      "get": {
+        "tags": ["Producto Controller"],
+        "summary": "Obtener todos los productos",
+        "operationId": "getAllProductos",
+        "responses": {
+          "200": {
+            "description": "Operación exitosa",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Producto" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Producto Controller"],
+        "summary": "Crear un nuevo producto",
+        "operationId": "createProducto",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Producto" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Producto creado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Producto" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/productos/{id}": {
+      "get": {
+        "tags": ["Producto Controller"],
+        "summary": "Obtener producto por ID",
+        "operationId": "getProductoById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int32" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Producto encontrado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Producto" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Producto Controller"],
+        "summary": "Eliminar producto por ID",
+        "operationId": "deleteProducto",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int32" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Producto eliminado" }
+        }
+      }
+    },
+    "/api/proveedores": {
+      "get": {
+        "tags": ["Proveedor Controller"],
+        "summary": "Obtener todos los proveedores",
+        "operationId": "getAllProveedores",
+        "responses": {
+          "200": {
+            "description": "Operación exitosa",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Proveedor" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Proveedor Controller"],
+        "summary": "Crear un nuevo proveedor",
+        "operationId": "createProveedor",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Proveedor" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Proveedor creado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Proveedor" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/proveedores/{id}": {
+      "get": {
+        "tags": ["Proveedor Controller"],
+        "summary": "Obtener proveedor por ID",
+        "operationId": "getProveedorById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int32" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Proveedor encontrado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Proveedor" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Proveedor Controller"],
+        "summary": "Eliminar proveedor por ID",
+        "operationId": "deleteProveedor",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int32" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Proveedor eliminado" }
+        }
+      }
+    },
+    "/api/ventas": {
+      "get": {
+        "tags": ["Venta Controller"],
+        "summary": "Obtener todas las ventas",
+        "operationId": "getAllVentas",
+        "responses": {
+          "200": {
+            "description": "Operación exitosa",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Venta" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Venta Controller"],
+        "summary": "Crear una nueva venta",
+        "operationId": "createVenta",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Venta" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Venta creada",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Venta" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ventas/{id}": {
+      "get": {
+        "tags": ["Venta Controller"],
+        "summary": "Obtener venta por ID",
+        "operationId": "getVentaById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int32" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Venta encontrada",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Venta" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/compras": {
+      "get": {
+        "tags": ["Compra Controller"],
+        "summary": "Obtener todas las compras",
+        "operationId": "getAllCompras",
+        "responses": {
+          "200": {
+            "description": "Operación exitosa",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Compra" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Compra Controller"],
+        "summary": "Crear una nueva compra",
+        "operationId": "createCompra",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Compra" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Compra creada",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Compra" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/compras/{id}": {
+      "get": {
+        "tags": ["Compra Controller"],
+        "summary": "Obtener compra por ID",
+        "operationId": "getCompraById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int32" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Compra encontrada",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Compra" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Cliente": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int32" },
+          "nombre": { "type": "string" },
+          "apellido1": { "type": "string" },
+          "apellido2": { "type": "string" },
+          "telefono": { "type": "string" },
+          "email": { "type": "string" },
+          "direccion": { "type": "string" },
+          "dni": { "type": "string" }
+        }
+      },
+      "Producto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int32" },
+          "nombre": { "type": "string" },
+          "coleccion": { "type": "string" },
+          "stock": { "type": "integer", "format": "int32" },
+          "precio": { "type": "number" },
+          "idProveedor": { "type": "integer", "format": "int32" }
+        }
+      },
+      "Proveedor": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int32" },
+          "nombre": { "type": "string" },
+          "emailContacto": { "type": "string" }
+        }
+      },
+      "DetalleVenta": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int32" },
+          "producto": { "$ref": "#/components/schemas/Producto" },
+          "cantidad": { "type": "integer", "format": "int32" },
+          "precioUnitario": { "type": "number" },
+          "subtotal": { "type": "number" }
+        }
+      },
+      "Venta": {
+        "type": "object",
+        "properties": {
+          "numFactura": { "type": "integer", "format": "int32" },
+          "fechaVenta": { "type": "string", "format": "date-time" },
+          "cliente": { "$ref": "#/components/schemas/Cliente" },
+          "totalImporte": { "type": "number" },
+          "detalles": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/DetalleVenta" }
+          }
+        }
+      },
+      "DetalleCompra": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int32" },
+          "producto": { "$ref": "#/components/schemas/Producto" },
+          "cantidad": { "type": "integer", "format": "int32" },
+          "precioUnitario": { "type": "number" },
+          "subtotal": { "type": "number" }
+        }
+      },
+      "Compra": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int32" },
+          "proveedor": { "$ref": "#/components/schemas/Proveedor" },
+          "fecha": { "type": "string", "format": "date-time" },
+          "totalImporte": { "type": "number" },
+          "detalles": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/DetalleCompra" }
+          }
+        }
+      }
+    }
+  }
+}

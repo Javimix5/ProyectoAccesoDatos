@@ -52,7 +52,8 @@ public class ApiTests {
     
     @Test
     public void testApiDocs() throws Exception {
-        mockMvc.perform(get("/api-docs"))
+        // La ruta se ha configurado como /API_DOC.json en application.properties
+        mockMvc.perform(get("/API_DOC.json"))
                 .andExpect(status().isOk());
     }
 }
