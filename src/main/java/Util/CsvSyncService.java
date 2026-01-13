@@ -1,26 +1,38 @@
 package Util;
-
-import Dao.*;
+/*
 import Model.Cliente;
 import Model.Compra;
+import Model.Producto;
 import Model.Proveedor;
 import Model.Venta;
+import Service.*;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Service
 public class CsvSyncService {
     private final CsvRepository csvRepo;
     private final CsvExporter csvExporter;
-    private final ClienteDAO clienteDAO = new ClienteDAO();
-    private final ProveedorDAO proveedorDAO = new ProveedorDAO();
-    private final VentaDAO ventaDAO = new VentaDAO();
-    private final CompraDAO compraDAO = new CompraDAO();
+    private final ClienteService clienteService;
+    private final ProveedorService proveedorService;
+    private final VentaService ventaService;
+    private final CompraService compraService;
+    private final ProductoService productoService;
 
-    public CsvSyncService(CsvRepository csvRepo, CsvExporter csvExporter) {
+    public CsvSyncService(CsvRepository csvRepo, CsvExporter csvExporter,
+                          ClienteService clienteService, ProveedorService proveedorService,
+                          VentaService ventaService, CompraService compraService,
+                          ProductoService productoService) {
         this.csvRepo = csvRepo;
         this.csvExporter = csvExporter;
+        this.clienteService = clienteService;
+        this.proveedorService = proveedorService;
+        this.ventaService = ventaService;
+        this.compraService = compraService;
+        this.productoService = productoService;
     }
 
     public boolean syncAndExport() {
@@ -34,20 +46,20 @@ public class CsvSyncService {
         }
     }
 
-    private void syncCsvToDatabase() throws Exception {
+    private void syncCsvToDatabase() {
         List<Cliente> csvClientes = csvRepo.loadClientes();
         for (Cliente c : csvClientes) {
             if (c == null) continue;
-            Cliente db = c.getDni() != null && !c.getDni().isBlank() ? clienteDAO.buscarPorDNI(c.getDni()) : null;
+            Cliente db = c.getDni() != null && !c.getDni().isBlank() ? clienteService.buscarPorDNI(c.getDni()) : null;
             if (db == null) {
-                clienteDAO.insertar(c);
+                clienteService.guardar(c);
             } else {
                 c.setId(db.getId());
-                clienteDAO.actualizar(c);
+                clienteService.guardar(c);
             }
         }
 
-        Set<Integer> ventasExistentes = ventaDAO.listarVentas().stream()
+        Set<Integer> ventasExistentes = ventaService.listarVentas().stream()
                 .map(Venta::getNumFactura).collect(Collectors.toSet());
         for (Venta v : csvRepo.loadVentas()) {
             if (v == null) continue;
@@ -55,37 +67,32 @@ public class CsvSyncService {
             Cliente c = v.getCliente();
             Cliente dbC = null;
             if (c != null) {
-                if (c.getId() > 0) dbC = clienteDAO.buscarPorId(c.getId());
-                if (dbC == null && c.getDni() != null) dbC = clienteDAO.buscarPorDNI(c.getDni());
+                if (c.getId() > 0) dbC = clienteService.buscarPorId(c.getId());
+                if (dbC == null && c.getDni() != null) dbC = clienteService.buscarPorDNI(c.getDni());
             }
             if (dbC == null) continue;
             v.setCliente(dbC);
-            ventaDAO.crearVenta(v);
+            ventaService.crearVenta(v);
         }
 
-        Set<Integer> comprasExistentes = compraDAO.listarCompras().stream()
+        Set<Integer> comprasExistentes = compraService.listarCompras().stream()
                 .map(Compra::getId).collect(Collectors.toSet());
         for (Compra comp : csvRepo.loadCompras()) {
             if (comp == null) continue;
             if (comp.getId() > 0 && comprasExistentes.contains(comp.getId())) continue;
             Proveedor prov = comp.getProveedor();
-            Proveedor dbP = prov != null ? proveedorDAO.buscarPorId(prov.getId()) : null;
+            Proveedor dbP = prov != null ? proveedorService.buscarPorId(prov.getId()) : null;
             if (dbP == null) continue;
             comp.setProveedor(dbP);
-            compraDAO.crearCompra(comp);
+            compraService.crearCompra(comp);
         }
     }
 
-    private void exportDbToCsv() throws Exception {
-        CsvExporter exporter = this.csvExporter;
-        ClienteDAO cDao = new ClienteDAO();
-        ProveedorDAO pDao = new ProveedorDAO();
-        ProductoDAO prodDao = new ProductoDAO();
-
-        exporter.exportClientes(cDao.obtenerTodos());
-        exporter.exportProveedores(pDao.obtenerTodos());
-        exporter.exportProductos(prodDao.obtenerInventario());
-        exporter.exportVentas(ventaDAO.listarVentas());
-        exporter.exportCompras(compraDAO.listarCompras());
+    private void exportDbToCsv() {
+        csvExporter.exportClientes(clienteService.obtenerTodos());
+        csvExporter.exportProveedores(proveedorService.obtenerTodos());
+        csvExporter.exportProductos(productoService.obtenerTodos());
+        csvExporter.exportVentas(ventaService.listarVentas());
+        csvExporter.exportCompras(compraService.listarCompras());
     }
-}
+}*/

@@ -1,5 +1,6 @@
 package Model;
 
+import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -7,11 +8,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Table(name = "compras")
 public class Compra {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    
+    @ManyToOne
+    @JoinColumn(name = "id_proveedor")
     private Proveedor proveedor;
+    
     private LocalDateTime fecha;
+    
+    @Column(name = "total_importe")
     private BigDecimal totalImporte = BigDecimal.ZERO;
+    
+    @OneToMany(mappedBy = "compra", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DetalleCompra> detalles = new ArrayList<>();
 
     public Compra() {
@@ -70,6 +83,7 @@ public class Compra {
 
     public void agregarDetalle(DetalleCompra d) {
         if (d == null) return;
+        d.setCompra(this);
         detalles.add(d);
         if (d.getPrecioUnitario() != null) {
             totalImporte = totalImporte.add(d.getPrecioUnitario().multiply(java.math.BigDecimal.valueOf(d.getCantidad())));

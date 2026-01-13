@@ -36,7 +36,8 @@ public class VentaHandler {
             }
         }
 
-        return ventaService.crearVenta(venta);
+        ventaService.crearVenta(venta);
+        return true;
     }
 
     public List<Venta> listarVentas() {

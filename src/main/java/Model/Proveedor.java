@@ -1,8 +1,17 @@
 package Model;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "proveedores")
 public class Proveedor {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    
     private String nombre;
+    
+    @Column(name = "email_contacto")
     private String emailContacto;
 
     public Proveedor() {

@@ -1,16 +1,36 @@
 package Model;
 
+import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "ventas")
 public class Venta {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "num_factura")
     private int numFactura;
+    
+    @Column(name = "fecha_venta")
     private LocalDateTime fechaVenta;
+    
+    @ManyToOne
+    @JoinColumn(name = "id_cliente")
     private Cliente cliente;
+    
+    @Column(name = "total_importe")
     private BigDecimal totalImporte;
-    private List<DetalleVenta> detalles; // Lista de productos vendidos
+    
+    @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DetalleVenta> detalles;
+
+    public Venta() {
+        this.detalles = new ArrayList<>();
+        this.totalImporte = BigDecimal.ZERO;
+    }
 
     public Venta(Cliente cliente) {
         this.cliente = cliente;
@@ -19,6 +39,7 @@ public class Venta {
     }
 
     public void agregarDetalle(DetalleVenta detalle) {
+        detalle.setVenta(this);
         this.detalles.add(detalle);
         this.totalImporte = this.totalImporte.add(detalle.getSubtotal());
     }

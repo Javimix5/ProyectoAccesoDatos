@@ -1,9 +1,15 @@
 package Model;
 
+import jakarta.persistence.*;
 import java.util.regex.Pattern;
 
+@Entity
+@Table(name = "clientes")
 public class Cliente {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    
     private String nombre;
     private String apellido1;
     private String apellido2;
@@ -12,7 +18,9 @@ public class Cliente {
     private String direccion;
     private String dni;
 
+    @Transient
     private static final Pattern DNI_PATTERN = Pattern.compile("^[0-9]{8}[A-Za-z]$");
+    @Transient
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
 
     public Cliente() {

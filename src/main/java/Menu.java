@@ -1,12 +1,7 @@
-package App;
-
 import Model.*;
 import Service.*;
 import Service.Handlers.CompraHandler;
 import Service.Handlers.VentaHandler;
-import Util.CsvExporter;
-import Util.CsvRepository;
-import Util.CsvSyncService;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -19,38 +14,20 @@ class Menu {
     private final ProveedorService proveedorService;
     private final VentaHandler ventaHandler;
     private final CompraHandler compraHandler;
-    private final CsvExporter csvExporter;
-    private final CsvRepository csvRepo;
-    private final CsvSyncService csvSyncService;
     private final Scanner scanner = new Scanner(System.in);
-    private boolean useCsv = false;
 
     Menu(ClienteService cs, ProductoService ps, ProveedorService prs,
-         CsvExporter exporter, CsvRepository repo, CsvSyncService csvSyncService,
          VentaHandler ventaHandler, CompraHandler compraHandler) {
         this.clienteService = cs;
         this.productoService = ps;
         this.proveedorService = prs;
-        this.csvExporter = exporter;
-        this.csvRepo = repo;
-        this.csvSyncService = csvSyncService;
         this.ventaHandler = ventaHandler;
         this.compraHandler = compraHandler;
     }
 
     public void start() {
-        elegirModo();
+        System.out.println("Modo seleccionado: Base de datos (Spring Boot)");
         menuPrincipal();
-    }
-
-    private void elegirModo() {
-        System.out.println("Seleccione modo de acceso a datos:");
-        System.out.println("1. Base de datos");
-        System.out.println("2. CSV (src/main/resources)");
-        System.out.print("Elige: ");
-        String op = scanner.nextLine().trim();
-        useCsv = "2".equals(op);
-        System.out.println("Modo seleccionado: " + (useCsv ? "CSV" : "Base de datos"));
     }
 
     private void menuPrincipal() {
@@ -60,7 +37,6 @@ class Menu {
             System.out.println("2. Gestión de Productos");
             System.out.println("3. Gestión de Ventas");
             System.out.println("4. Gestión de Compras");
-            System.out.println("5. Exportar/Actualizar CSV");
             System.out.println("0. Salir");
             System.out.print("Elige una opción: ");
             String op = scanner.nextLine().trim();
@@ -76,9 +52,6 @@ class Menu {
                     break;
                 case "4":
                     gestionarCompras();
-                    break;
-                case "5":
-                    exportarCsv();
                     break;
                 case "0":
                     return;
@@ -99,19 +72,11 @@ class Menu {
             String op = scanner.nextLine().trim();
             switch (op) {
                 case "1":
-                    if (useCsv) {
-                        List<Cliente> clientes = csvRepo.loadClientes();
-                        if (clientes.isEmpty()) System.out.println("Sin clientes (CSV).");
-                        else clientes.forEach(System.out::println);
-                        System.out.print("Pulsa ENTER para volver...");
-                        scanner.nextLine();
-                    } else {
-                        List<Cliente> clientes = clienteService.obtenerTodos();
-                        if (clientes.isEmpty()) System.out.println("Sin clientes.");
-                        else clientes.forEach(System.out::println);
-                        System.out.print("Pulsa ENTER para volver...");
-                        scanner.nextLine();
-                    }
+                    List<Cliente> clientes = clienteService.obtenerTodos();
+                    if (clientes.isEmpty()) System.out.println("Sin clientes.");
+                    else clientes.forEach(System.out::println);
+                    System.out.print("Pulsa ENTER para volver...");
+                    scanner.nextLine();
                     break;
                 case "2":
                     Cliente nuevo = new Cliente();
@@ -151,36 +116,22 @@ class Menu {
                         }
                     }
 
-                    if (useCsv) {
-                        boolean ok = csvRepo.appendCliente(nuevo);
-                        System.out.println(ok ? "Cliente añadido (CSV)." : "Error añadiendo cliente (CSV).");
-                    } else {
-                        boolean ok = clienteService.insertar(nuevo);
-                        System.out.println(ok ? "Cliente añadido." : "Error añadiendo cliente.");
-                    }
+                    clienteService.guardar(nuevo);
+                    System.out.println("Cliente añadido.");
                     break;
                 case "3":
-                    if (useCsv) {
-                        List<Cliente> clientesCsv = csvRepo.loadClientes();
-                        if (clientesCsv.isEmpty()) System.out.println("Sin clientes (CSV).");
-                        else clientesCsv.forEach(System.out::println);
-                    } else {
-                        List<Cliente> clientesDb = clienteService.obtenerTodos();
-                        if (clientesDb.isEmpty()) System.out.println("Sin clientes.");
-                        else clientesDb.forEach(System.out::println);
-                    }
+                    List<Cliente> clientesDb = clienteService.obtenerTodos();
+                    if (clientesDb.isEmpty()) System.out.println("Sin clientes.");
+                    else clientesDb.forEach(System.out::println);
 
                     System.out.print("ID cliente a eliminar: ");
                     try {
                         int id = Integer.parseInt(scanner.nextLine().trim());
-                        if (useCsv) {
-                        } else {
-                            try {
-                                clienteService.eliminar(id);
-                                System.out.println("Cliente eliminado.");
-                            } catch (Service.BusinessException e) {
-                                System.out.println("No se puede eliminar: " + e.getMessage());
-                            }
+                        try {
+                            clienteService.eliminar(id);
+                            System.out.println("Cliente eliminado.");
+                        } catch (Exception e) {
+                            System.out.println("No se puede eliminar: " + e.getMessage());
                         }
                     } catch (NumberFormatException e) {
                         System.out.println("ID no válido.");
@@ -195,15 +146,7 @@ class Menu {
     }
 
     private void listarProductos() {
-        if (useCsv) {
-            List<Producto> inventario = csvRepo.loadProductos();
-            if (inventario.isEmpty()) System.out.println("Sin productos (CSV).");
-            else inventario.forEach(System.out::println);
-            System.out.print("Pulsa ENTER para volver...");
-            scanner.nextLine();
-            return;
-        }
-        List<Producto> inventario = productoService.obtenerInventario();
+        List<Producto> inventario = productoService.obtenerTodos();
         if (inventario.isEmpty()) System.out.println("Sin productos.");
         else inventario.forEach(System.out::println);
         System.out.print("Pulsa ENTER para volver...");
@@ -234,58 +177,6 @@ class Menu {
     }
 
     private void crearVentaInteractiva() {
-        if (useCsv) {
-            List<Cliente> clientes = csvRepo.loadClientes();
-            if (clientes.isEmpty()) {
-                System.out.println("No hay clientes (CSV).");
-                return;
-            }
-            clientes.forEach(c -> System.out.println("ID: " + c.getId() + " | " + c.getNombre() + " | DNI: " + c.getDni()));
-            System.out.print("Introduzca ID cliente: ");
-            String entrada = scanner.nextLine().trim();
-            Cliente cliente = clientes.stream().filter(c -> String.valueOf(c.getId()).equals(entrada)).findFirst().orElse(null);
-            if (cliente == null) {
-                System.out.println("Cliente no encontrado (CSV).");
-                return;
-            }
-            Venta venta = new Venta(cliente);
-            List<Producto> inventario = csvRepo.loadProductos();
-            if (inventario.isEmpty()) {
-                System.out.println("No hay productos (CSV).");
-                return;
-            }
-            while (true) {
-                inventario.forEach(System.out::println);
-                System.out.print("ID producto (0 para terminar): ");
-                int id = Integer.parseInt(scanner.nextLine().trim());
-                if (id == 0) break;
-                Producto p = inventario.stream().filter(prod -> prod.getId() == id).findFirst().orElse(null);
-                if (p == null) {
-                    System.out.println("Producto no encontrado (CSV).");
-                    continue;
-                }
-                System.out.print("Cantidad: ");
-                int cantidad = Integer.parseInt(scanner.nextLine().trim());
-                if (cantidad <= 0) {
-                    System.out.println("Cantidad no válida.");
-                    continue;
-                }
-                if (p.getStock() < cantidad) {
-                    System.out.println("Stock insuficiente (CSV).");
-                    continue;
-                }
-                venta.agregarDetalle(new Model.DetalleVenta(p, cantidad));
-                System.out.println("Añadido. Subtotal actual: " + venta.getTotalImporte());
-            }
-            if (venta.getDetalles().isEmpty()) {
-                System.out.println("Venta vacía, cancelada.");
-                return;
-            }
-            boolean ok = csvRepo.appendVenta(venta);
-            System.out.println(ok ? "Venta registrada (CSV)." : "Error al registrar venta (CSV).");
-            return;
-        }
-
         System.out.println("\nClientes disponibles:");
         List<Cliente> clientes = clienteService.obtenerTodos();
         if (clientes == null || clientes.isEmpty()) {
@@ -294,7 +185,7 @@ class Menu {
         }
         clientes.forEach(c -> System.out.println("ID: " + c.getId() + " | Nombre: " + c.getNombre() + " " + c.getApellido1() + " | DNI: " + c.getDni()));
 
-        System.out.print("Introduzca ID o DNI del cliente: ");
+        System.out.print("Introduzca ID del cliente: ");
         String entrada = scanner.nextLine().trim();
         Cliente cliente = null;
         if (entrada.matches("\\d+")) {
@@ -303,14 +194,13 @@ class Menu {
             } catch (Exception ignored) {
             }
         }
-        if (cliente == null) cliente = clienteService.buscarPorDNI(entrada);
         if (cliente == null) {
             System.out.println("Cliente no encontrado.");
             return;
         }
 
         Venta venta = new Venta(cliente);
-        List<Producto> inventario = productoService.obtenerInventario();
+        List<Producto> inventario = productoService.obtenerTodos();
         while (true) {
             inventario.forEach(System.out::println);
             System.out.print("ID producto (0 para terminar): ");
@@ -347,15 +237,6 @@ class Menu {
     }
 
     private void listarVentas() {
-        if (useCsv) {
-            List<Venta> ventas = csvRepo.loadVentas();
-            if (ventas.isEmpty()) System.out.println("Sin ventas (CSV).");
-            else ventas.forEach(v -> System.out.println("Venta #" + v.getNumFactura() + " | Cliente: " +
-                    (v.getCliente() != null ? v.getCliente().getNombre() : "N/A") + " | Total: " + v.getTotalImporte()));
-            System.out.print("Pulsa ENTER para volver...");
-            scanner.nextLine();
-            return;
-        }
         List<Venta> ventas = ventaHandler.listarVentas();
         if (ventas.isEmpty()) System.out.println("Sin ventas.");
         else ventas.forEach(v -> System.out.println("Venta #" + v.getNumFactura() + " | Cliente: " +
@@ -388,52 +269,6 @@ class Menu {
     }
 
     private void crearCompraInteractiva() {
-        if (useCsv) {
-            List<Proveedor> proveedores = csvRepo.loadProveedores();
-            if (proveedores.isEmpty()) {
-                System.out.println("No hay proveedores (CSV).");
-                return;
-            }
-            proveedores.forEach(p -> System.out.println("ID: " + p.getId() + " | " + p.getNombre()));
-            System.out.print("ID proveedor: ");
-            int idProv = Integer.parseInt(scanner.nextLine().trim());
-            Proveedor prov = proveedores.stream().filter(p -> p.getId() == idProv).findFirst().orElse(null);
-            if (prov == null) {
-                System.out.println("Proveedor no encontrado (CSV).");
-                return;
-            }
-            Compra compra = new Compra(prov);
-            List<Producto> productos = csvRepo.loadProductos().stream()
-                    .filter(p -> p.getIdProveedor() != null && p.getIdProveedor() == prov.getId())
-                    .collect(Collectors.toList());
-            if (productos.isEmpty()) System.out.println("No hay productos del proveedor (CSV). Mostrando todos.");
-            List<Producto> pool = productos.isEmpty() ? csvRepo.loadProductos() : productos;
-            while (true) {
-                pool.forEach(System.out::println);
-                System.out.print("ID producto (0 para terminar): ");
-                int id = Integer.parseInt(scanner.nextLine().trim());
-                if (id == 0) break;
-                Producto p = pool.stream().filter(prod -> prod.getId() == id).findFirst().orElse(null);
-                if (p == null) {
-                    System.out.println("Producto no encontrado (CSV).");
-                    continue;
-                }
-                System.out.print("Cantidad: ");
-                int cantidad = Integer.parseInt(scanner.nextLine().trim());
-                System.out.print("Precio unitario: ");
-                BigDecimal precio = new BigDecimal(scanner.nextLine().trim());
-                compra.agregarDetalle(new Model.DetalleCompra(p, cantidad, precio));
-                System.out.println("Añadido. Total provisional: " + compra.getTotalImporte());
-            }
-            if (compra.getDetalles().isEmpty()) {
-                System.out.println("Compra vacía, cancelada.");
-                return;
-            }
-            boolean ok = csvRepo.appendCompra(compra);
-            System.out.println(ok ? "Compra registrada (CSV)." : "Error al registrar compra (CSV).");
-            return;
-        }
-
         List<Proveedor> proveedores = proveedorService.obtenerTodos();
         if (proveedores.isEmpty()) {
             System.out.println("No hay proveedores.");
@@ -448,10 +283,14 @@ class Menu {
             return;
         }
         Compra compra = new Compra(prov);
-        List<Producto> productosProv = productoService.obtenerPorProveedor(idProv);
+        // Nota: productoService.obtenerPorProveedor(idProv) no existe en la interfaz básica, usamos obtenerTodos
+        List<Producto> productosProv = productoService.obtenerTodos().stream()
+                .filter(p -> p.getIdProveedor() != null && p.getIdProveedor() == idProv)
+                .collect(Collectors.toList());
+        
         if (productosProv.isEmpty())
             System.out.println("Este proveedor no tiene productos asociados. Puede añadir igual.");
-        List<Producto> pool = productosProv.isEmpty() ? productoService.obtenerInventario() : productosProv;
+        List<Producto> pool = productosProv.isEmpty() ? productoService.obtenerTodos() : productosProv;
         while (true) {
             pool.forEach(System.out::println);
             System.out.print("ID producto (0 para terminar): ");
@@ -486,41 +325,10 @@ class Menu {
     }
 
     private void listarCompras() {
-        if (useCsv) {
-            List<Compra> compras = csvRepo.loadCompras();
-            if (compras.isEmpty()) System.out.println("Sin compras (CSV).");
-            else compras.forEach(System.out::println);
-            System.out.print("Pulsa ENTER para volver...");
-            scanner.nextLine();
-            return;
-        }
         List<Compra> compras = compraHandler.listarCompras();
         if (compras.isEmpty()) System.out.println("Sin compras.");
         else compras.forEach(System.out::println);
         System.out.print("Pulsa ENTER para volver...");
         scanner.nextLine();
-    }
-
-    private void exportarCsv() {
-        if (useCsv) {
-            System.out.println("Sincronizando CSV -> Base de datos y actualizando CSV desde BD...");
-            boolean ok = csvSyncService.syncAndExport();
-            System.out.println(ok ? "Sincronización completada." : "Error durante la sincronización. Consulte logs.");
-            return;
-        }
-
-        try {
-            csvExporter.exportClientes(clienteService.obtenerTodos());
-            csvExporter.exportProveedores(proveedorService.obtenerTodos());
-            csvExporter.exportProductos(productoService.obtenerInventario());
-            List<Venta> ventas = ventaHandler.listarVentas();
-            List<Compra> compras = compraHandler.listarCompras();
-            csvExporter.exportVentas(ventas);
-            csvExporter.exportCompras(compras);
-
-            System.out.println("CSV generados en src/main/resources");
-        } catch (Exception e) {
-            System.out.println("Error exportando CSV: " + e.getMessage());
-        }
     }
 }

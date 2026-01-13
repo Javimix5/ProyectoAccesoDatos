@@ -1,12 +1,30 @@
 package Model;
 
+import jakarta.persistence.*;
 import java.math.BigDecimal;
 
+@Entity
+@Table(name = "detalle_venta")
 public class DetalleVenta {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    
+    @ManyToOne
+    @JoinColumn(name = "id_producto")
     private Producto producto;
+    
     private int cantidad;
+    
+    @Column(name = "precio_unitario")
     private BigDecimal precioUnitario;
+    
+    @ManyToOne
+    @JoinColumn(name = "id_venta")
+    private Venta venta;
+
+    public DetalleVenta() {
+    }
 
     public DetalleVenta(Producto producto, int cantidad) {
         this.producto = producto;
@@ -45,8 +63,17 @@ public class DetalleVenta {
     public void setPrecioUnitario(BigDecimal precioUnitario) {
         this.precioUnitario = precioUnitario;
     }
+    
+    public Venta getVenta() {
+        return venta;
+    }
+
+    public void setVenta(Venta venta) {
+        this.venta = venta;
+    }
 
     public BigDecimal getSubtotal() {
+        if (precioUnitario == null) return BigDecimal.ZERO;
         return precioUnitario.multiply(new BigDecimal(cantidad));
     }
 }

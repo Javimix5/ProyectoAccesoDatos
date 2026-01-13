@@ -47,7 +47,8 @@ public class CompraHandler {
                 throw new BusinessException("Precio unitario inválido para producto " + p.getId());
         }
 
-        return compraService.crearCompra(compra);
+        compraService.crearCompra(compra);
+        return true;
     }
 
     public List<Compra> listarCompras() {

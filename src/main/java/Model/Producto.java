@@ -1,14 +1,22 @@
 package Model;
 
+import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+@Entity
+@Table(name = "productos")
 public class Producto {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    
     private String nombre;
     private String coleccion;
     private int stock;
     private BigDecimal precio;
+    
+    @Column(name = "id_proveedor")
     private Integer idProveedor;
 
     public Producto() {
