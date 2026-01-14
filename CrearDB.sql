@@ -126,3 +126,4 @@ CREATE TABLE IF NOT EXISTS detalle_compras (
     FOREIGN KEY (producto_id)
         REFERENCES productos (id)
 );
+

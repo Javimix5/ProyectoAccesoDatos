@@ -1,13 +1,15 @@
 package Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "detalle_venta")
+@Table(name = "detalle_ventas")
 public class DetalleVenta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_detalle")
     private int id;
     
     @ManyToOne
@@ -20,7 +22,8 @@ public class DetalleVenta {
     private BigDecimal precioUnitario;
     
     @ManyToOne
-    @JoinColumn(name = "id_venta")
+    @JoinColumn(name = "id_venta", referencedColumnName = "num_factura")
+    @JsonIgnoreProperties("detalles")
     private Venta venta;
 
     public DetalleVenta() {

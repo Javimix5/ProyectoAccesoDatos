@@ -1,5 +1,6 @@
 package Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -24,8 +25,9 @@ public class Venta {
     @Column(name = "total_importe")
     private BigDecimal totalImporte;
     
-    @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<DetalleVenta> detalles;
+    @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonIgnoreProperties("venta")
+    private List<DetalleVenta> detalles = new ArrayList<>();
 
     public Venta() {
         this.detalles = new ArrayList<>();

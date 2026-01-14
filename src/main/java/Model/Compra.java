@@ -1,5 +1,6 @@
 package Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -16,15 +17,16 @@ public class Compra {
     private int id;
     
     @ManyToOne
-    @JoinColumn(name = "id_proveedor")
+    @JoinColumn(name = "proveedor_id")
     private Proveedor proveedor;
     
     private LocalDateTime fecha;
     
-    @Column(name = "total_importe")
+    @Column(name = "total")
     private BigDecimal totalImporte = BigDecimal.ZERO;
     
-    @OneToMany(mappedBy = "compra", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "compra", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonIgnoreProperties("compra")
     private List<DetalleCompra> detalles = new ArrayList<>();
 
     public Compra() {

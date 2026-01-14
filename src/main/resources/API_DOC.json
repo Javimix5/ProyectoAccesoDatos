@@ -14,7 +14,7 @@
   "paths": {
     "/api/clientes": {
       "get": {
-        "tags": ["Cliente Controller"],
+        "tags": ["Cliente"],
         "summary": "Obtener todos los clientes",
         "operationId": "getAllClientes",
         "responses": {
@@ -32,7 +32,7 @@
         }
       },
       "post": {
-        "tags": ["Cliente Controller"],
+        "tags": ["Cliente"],
         "summary": "Crear un nuevo cliente",
         "operationId": "createCliente",
         "requestBody": {
@@ -57,7 +57,7 @@
     },
     "/api/clientes/{id}": {
       "get": {
-        "tags": ["Cliente Controller"],
+        "tags": ["Cliente"],
         "summary": "Obtener cliente por ID",
         "operationId": "getClienteById",
         "parameters": [
@@ -80,7 +80,7 @@
         }
       },
       "delete": {
-        "tags": ["Cliente Controller"],
+        "tags": ["Cliente"],
         "summary": "Eliminar cliente por ID",
         "operationId": "deleteCliente",
         "parameters": [
@@ -98,7 +98,7 @@
     },
     "/api/productos": {
       "get": {
-        "tags": ["Producto Controller"],
+        "tags": ["Producto"],
         "summary": "Obtener todos los productos",
         "operationId": "getAllProductos",
         "responses": {
@@ -116,7 +116,7 @@
         }
       },
       "post": {
-        "tags": ["Producto Controller"],
+        "tags": ["Producto"],
         "summary": "Crear un nuevo producto",
         "operationId": "createProducto",
         "requestBody": {
@@ -141,7 +141,7 @@
     },
     "/api/productos/{id}": {
       "get": {
-        "tags": ["Producto Controller"],
+        "tags": ["Producto"],
         "summary": "Obtener producto por ID",
         "operationId": "getProductoById",
         "parameters": [
@@ -164,7 +164,7 @@
         }
       },
       "delete": {
-        "tags": ["Producto Controller"],
+        "tags": ["Producto"],
         "summary": "Eliminar producto por ID",
         "operationId": "deleteProducto",
         "parameters": [
@@ -182,7 +182,7 @@
     },
     "/api/proveedores": {
       "get": {
-        "tags": ["Proveedor Controller"],
+        "tags": ["Proveedor"],
         "summary": "Obtener todos los proveedores",
         "operationId": "getAllProveedores",
         "responses": {
@@ -200,7 +200,7 @@
         }
       },
       "post": {
-        "tags": ["Proveedor Controller"],
+        "tags": ["Proveedor"],
         "summary": "Crear un nuevo proveedor",
         "operationId": "createProveedor",
         "requestBody": {
@@ -225,7 +225,7 @@
     },
     "/api/proveedores/{id}": {
       "get": {
-        "tags": ["Proveedor Controller"],
+        "tags": ["Proveedor"],
         "summary": "Obtener proveedor por ID",
         "operationId": "getProveedorById",
         "parameters": [
@@ -248,7 +248,7 @@
         }
       },
       "delete": {
-        "tags": ["Proveedor Controller"],
+        "tags": ["Proveedor"],
         "summary": "Eliminar proveedor por ID",
         "operationId": "deleteProveedor",
         "parameters": [
@@ -266,7 +266,7 @@
     },
     "/api/ventas": {
       "get": {
-        "tags": ["Venta Controller"],
+        "tags": ["Venta"],
         "summary": "Obtener todas las ventas",
         "operationId": "getAllVentas",
         "responses": {
@@ -284,7 +284,7 @@
         }
       },
       "post": {
-        "tags": ["Venta Controller"],
+        "tags": ["Venta"],
         "summary": "Crear una nueva venta",
         "operationId": "createVenta",
         "requestBody": {
@@ -309,7 +309,7 @@
     },
     "/api/ventas/{id}": {
       "get": {
-        "tags": ["Venta Controller"],
+        "tags": ["Venta"],
         "summary": "Obtener venta por ID",
         "operationId": "getVentaById",
         "parameters": [
@@ -334,7 +334,7 @@
     },
     "/api/compras": {
       "get": {
-        "tags": ["Compra Controller"],
+        "tags": ["Compra"],
         "summary": "Obtener todas las compras",
         "operationId": "getAllCompras",
         "responses": {
@@ -352,7 +352,7 @@
         }
       },
       "post": {
-        "tags": ["Compra Controller"],
+        "tags": ["Compra"],
         "summary": "Crear una nueva compra",
         "operationId": "createCompra",
         "requestBody": {
@@ -377,7 +377,7 @@
     },
     "/api/compras/{id}": {
       "get": {
-        "tags": ["Compra Controller"],
+        "tags": ["Compra"],
         "summary": "Obtener compra por ID",
         "operationId": "getCompraById",
         "parameters": [
