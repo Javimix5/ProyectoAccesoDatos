@@ -16,7 +16,7 @@ public class Producto {
     private int stock;
     private BigDecimal precio;
     
-    @Column(name = "id_proveedor")
+    @Column(name = "id_proveedor", nullable = false)
     private Integer idProveedor;
 
     public Producto() {

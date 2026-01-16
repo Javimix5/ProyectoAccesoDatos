@@ -17,7 +17,7 @@ public class Compra {
     private int id;
     
     @ManyToOne
-    @JoinColumn(name = "proveedor_id")
+    @JoinColumn(name = "proveedor_id", nullable = false)
     private Proveedor proveedor;
     
     private LocalDateTime fecha;

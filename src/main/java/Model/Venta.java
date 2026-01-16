@@ -12,14 +12,14 @@ import java.util.List;
 public class Venta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "num_factura")
+    @Column(name = "num_factura", nullable = false)
     private int numFactura;
     
     @Column(name = "fecha_venta")
     private LocalDateTime fechaVenta;
     
     @ManyToOne
-    @JoinColumn(name = "id_cliente")
+    @JoinColumn(name = "id_cliente", nullable = false)
     private Cliente cliente;
     
     @Column(name = "total_importe")

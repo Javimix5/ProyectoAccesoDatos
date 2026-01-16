@@ -12,7 +12,7 @@ public class DetalleCompra {
     private int id;
     
     @ManyToOne
-    @JoinColumn(name = "producto_id")
+    @JoinColumn(name = "producto_id", nullable = false)
     private Producto producto;
     
     private int cantidad;
@@ -21,7 +21,7 @@ public class DetalleCompra {
     private BigDecimal precioUnitario;
     
     @ManyToOne
-    @JoinColumn(name = "compra_id")
+    @JoinColumn(name = "compra_id", referencedColumnName = "id", nullable = false)
     @JsonIgnoreProperties("detalles")
     private Compra compra;
 
